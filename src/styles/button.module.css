@@ -1,0 +1,18 @@
+.submitBtn
+{
+  width: fit-content;
+  padding: 16px 32px;
+  background-color: rgb(2,0,36);
+  border: none;
+  border-radius: 32px;
+  backdrop-filter: blur(10px);
+  box-shadow: 20px 20px 40px -6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  transition: all ease-in-out 0.3s;
+}
+
+.submitBtn:hover
+{
+    background-color: rgb(34,32,68);
+    transition: all ease-in-out 0.3s;
+}
