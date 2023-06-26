@@ -4,6 +4,7 @@ import { FormEventHandler, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Axios from 'axios';
 
 export default function Login()
 {
@@ -20,17 +21,19 @@ export default function Login()
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) =>
   {
     e.preventDefault();
-    console.log(user);
-    const res = await signIn("credentials", {
-      username: user.username,
-      password: user.password,
-      redirect: false
-    })
-    if(res?.error !== 'invalid credentials') push('/dashboard');
-    else setErr(true);
+    await Axios.post('http://localhost:3000/api/user',
+		{
+      name: user.name,
+		  username: user.username, 
+		  password: user.password
+		}).then(() =>
+    {
+      push('/login');
+		});
   }
 
   const [ user, setUser ] = useState({
+    name: '',
     username: '',
     password: ''
   });
@@ -40,6 +43,14 @@ export default function Login()
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2>Sign In</h2>
         
+        <div className={styles.inputField}>
+          <label htmlFor="name">Name</label>
+          <input type="text" name="name" id="name" className={styles.input} placeholder='Name'
+            value={user.name}
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
+          />
+        </div>
+
         <div className={styles.inputField}>
           <label htmlFor="username">Username</label>
           <input type="text" name="username" id="username" className={styles.input} placeholder='Username'
@@ -55,11 +66,10 @@ export default function Login()
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
         </div>
-        {err && <p style={{color: 'red'}}>Invalid Credentials</p>}
         <div className={styles.action}>
-          <button type="submit" className={btnStyles.submitBtn}>Sign In</button>
-          <h2 style={{fontSize: 12}}>or</h2>
-          <Link href="../register">Register</Link>
+        <button type="submit" className={btnStyles.submitBtn}>Submit</button>
+        <h2 style={{fontSize: 12}}>or</h2>
+        <Link href={"../login"}>Login</Link>
         </div>
       </form>
     </main>

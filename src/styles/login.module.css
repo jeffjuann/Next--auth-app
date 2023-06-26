@@ -35,9 +35,21 @@
   border-radius: 32px;
   border: none;
   color: black;
+  background: #EDEDED;
+  transition: all ease-in-out 0.1s;
 }
 
 .input:focus
 {
   outline: none;
+  background: #ffffff;
+  transition: all ease-in-out 0.1s;
+}
+
+.action
+{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
 }
