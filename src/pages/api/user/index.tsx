@@ -1,21 +1,22 @@
-import { Response, Request } from 'express';
+import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient();
 
-export default function handler(req: Request, res: Response) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
-        const bodys = {
-            message: "Hello There",
-            body: {
-                testing: "Tesint method GET",
-            }
-        }
-        res.status(200).json(bodys);
+        const allUser = await prisma.user.findMany();
+        res.status(200).json(allUser);
     } 
     else if(req.method === 'POST')
     {
-        console.log("POST Success");
+        const newUser = await prisma.user.create({ data: req.body });
+        console.log(newUser);
+        res.status(200).json(newUser);
     }
     else
     {
 
     }
   }
+
+export default handler;

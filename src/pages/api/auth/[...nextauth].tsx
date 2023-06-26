@@ -1,5 +1,7 @@
+import { PrismaClient } from '@prisma/client'
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+const prisma = new PrismaClient();
 
 const authOptions: NextAuthOptions = {
   session:
@@ -11,32 +13,26 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: "credentials",
       credentials: {},
-      authorize(credentials, req) {
+      async authorize(credentials, req) {
         const { username, password } = credentials as {
           username: string;
           password: string;
         };
-        if (username === "johndoe" && password === "jd123")
+        
+        const user = await prisma.user.findFirst({
+          where: {
+            username: username,
+            password: password
+          }
+        })
+        if(user === null)
         {
-            return {
-                id: 'jd001',
-                name: 'John Doe',
-                username: 'johndoe',
-                password: 'jd123'
-            }
+          throw new Error("invalid credentials");
         }
-
-        if (username === "jojoli" && password === "jl123")
+        else
         {
-            return {
-                id: 'jl001',
-                name: 'Jojo Lili',
-                username: 'jojoli',
-                password: 'jl123'
-            }
+          return user;
         }
-
-        throw new Error("invalid credentials");
     },
     }),
   ],

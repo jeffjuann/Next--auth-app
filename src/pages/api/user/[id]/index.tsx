@@ -1,6 +1,26 @@
-import { useRouter } from 'next/router'
- 
-export default function Page() {
-  const router = useRouter()
-  return <p>Post: {router.query.slug}</p>
-}
+import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient();
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;  
+  if (req.method === 'GET') {
+      const user = await prisma.user.findFirst({
+        where: {
+          id: parseInt(id),
+        },
+      });
+      console.log(id)
+      res.status(200).json(user);
+    } 
+    else if(req.method === 'POST')
+    {
+        console.log(req.query.id);
+        console.log("POST Success");
+        res.status(200).send("Successfully POST id: "+req.query.id);
+    }
+    else
+    {
+
+    }
+  }
