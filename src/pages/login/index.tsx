@@ -59,7 +59,7 @@ export default function Login()
         <div className={styles.action}>
           <button type="submit" className={btnStyles.submitBtn}>Sign In</button>
           <h2 style={{fontSize: 12}}>or</h2>
-          <Link href="../register">Register</Link>
+          <h2 style={{fontSize: 14}}>Create New Account? <Link href="../register">Register</Link></h2>
         </div>
       </form>
     </main>

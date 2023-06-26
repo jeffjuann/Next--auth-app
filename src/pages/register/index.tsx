@@ -41,7 +41,7 @@ export default function Login()
   return (
     <main className={styles.main}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h2>Sign In</h2>
+        <h2>Sign Up</h2>
         
         <div className={styles.inputField}>
           <label htmlFor="name">Name</label>
@@ -69,7 +69,7 @@ export default function Login()
         <div className={styles.action}>
         <button type="submit" className={btnStyles.submitBtn}>Submit</button>
         <h2 style={{fontSize: 12}}>or</h2>
-        <Link href={"../login"}>Login</Link>
+        <h2 style={{fontSize: 14}}>Already Have an Account? <Link href={"../login"}>Sign In</Link></h2>
         </div>
       </form>
     </main>
