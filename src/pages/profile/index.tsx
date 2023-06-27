@@ -2,36 +2,39 @@ import styles from '@/styles/login.module.css'
 import btnStyles from '@/styles/button.module.css';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import Axios from 'axios';
 
 export default function dashboard() 
 {
   const session = useSession();
   console.log(session);
   const { push } = useRouter();
-  const [testing, setTesting] = useState("auth");
-
-  const handleSignOut = () =>
-  {
-    signOut();
-  }
 
   useEffect(() => {
     if( session.status === 'unauthenticated' ) push('/login');
-  }, [handleSignOut])
+  }, [])
 
-  const handleEditProfile = () =>
+	const [ newPassword, setNewPassword ] = useState('');
+
+  const handleSaveBtn = async (e: any) =>
   {
-    push("./profile")
+    // e.preventDefault();
+    // await Axios.post('http://localhost:3000/api/user'+session.data?.user?.,
+		// {
+		// 	password: user.password
+		// }).then(() =>
+    // {
+    //   push('/login');
+		// });
   }
 
   return (
     <main className={styles.main}>
       <div className={styles.form}>
         <h2>Dashboard</h2>
-        <p>You are Logged In as {session.data?.user?.name}</p>
-        <button onClick={handleEditProfile} className={btnStyles.submitBtn}>Edit Profile</button>
-        <button onClick={handleSignOut} className={btnStyles.submitBtn}>Sign Out</button>
+        <p>You are Logged In as ID: {session.data?.user?.id}</p>
+        <button onClick={handleSaveBtn} className={btnStyles.submitBtn}>Edit Profile</button>
       </div>
     </main>
   )

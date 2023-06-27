@@ -10,10 +10,10 @@ export default function Login()
   const session = useSession();
   console.log(session);
   const { push } = useRouter();
-  const [testing, setTesting] = useState("auth");
   const [err, setErr] = useState(false);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if( session.status === 'authenticated' ) push('/dashboard');
   })
 
@@ -26,8 +26,9 @@ export default function Login()
       password: user.password,
       redirect: false
     })
-    if(res?.error !== 'invalid credentials') push('/dashboard');
-    else setErr(true);
+    console.log(session);
+    // if(res?.error !== 'invalid credentials') push('/dashboard');
+    // else setErr(true);
   }
 
   const [ user, setUser ] = useState({

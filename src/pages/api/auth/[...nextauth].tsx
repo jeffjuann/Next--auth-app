@@ -36,6 +36,20 @@ const authOptions: NextAuthOptions = {
     },
     }),
   ],
+  callbacks: {
+    jwt({ token, account, user }) {
+      if (account) {
+        token.accessToken = account.access_token
+        token.id = user?.id
+      }
+      return token
+    },
+    session({ session, token }) {
+        session.user.id = token.id;
+  
+        return session;
+    },
+  },
   pages: {
     signIn: "/login",
     // error: '/auth/error',
