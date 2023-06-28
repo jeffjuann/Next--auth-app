@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: parseInt(id),
       },
     });
-    console.log(id)
+    
     res.status(200).json(user);
   } 
   else if(req.method === 'POST')
@@ -33,5 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
     res.status(200).json(newPassword);
+  }
+  else if(req.method === 'DELETE')
+  {
+    const u = await prisma.user.delete({
+      where: {
+        id: parseInt(id),
+      }
+    })
+    res.status(200).send(`DELETE User with ${id} Success`);
   }
 }

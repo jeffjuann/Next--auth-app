@@ -1,4 +1,4 @@
-import styles from '@/styles/login.module.css'
+import styles from '@/styles/page.module.css'
 import btnStyles from '@/styles/button.module.css';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';

@@ -1,12 +1,10 @@
 .submitBtn
 {
   width: fit-content;
-  padding: 16px 32px;
-  background-color: rgb(0,0,36);
+  padding: 12px 32px;
+  background-color: #9CB3D3;
   border: none;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  box-shadow: 20px 20px 40px -6px rgba(0,0,0,0.2);
+  border-radius: 6px;
   font-weight: bold;
   transition: all ease-in-out 0.1s;
 }
@@ -15,4 +13,5 @@
 {
   background-color: rgb(50, 50, 86);
   transition: all ease-in-out 0.1s;
+  background: #8EA8CC;
 }
