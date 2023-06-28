@@ -10,6 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     if( session.status === 'unauthenticated' ) push('/login');
+    else push('/dashboard');
   })
   return (
     <>

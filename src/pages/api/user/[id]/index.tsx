@@ -21,8 +21,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log("POST Success");
     res.status(200).send("Successfully POST id: "+req.query.id);
   }
-  else if(req.method === 'PUT')
+  else if(req.method === 'PATCH')
   {
-
+    const newPassword = req.body.password;
+    const newUser = await prisma.user.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        password: newPassword,
+      }
+    });
+    res.status(200).json(newPassword);
   }
 }

@@ -19,14 +19,14 @@ export default function dashboard()
 
   const handleSaveBtn = async (e: any) =>
   {
-    // e.preventDefault();
-    // await Axios.post('http://localhost:3000/api/user'+session.data?.user?.,
-		// {
-		// 	password: user.password
-		// }).then(() =>
-    // {
-    //   push('/login');
-		// });
+    e.preventDefault();
+    await Axios.patch('http://localhost:3000/api/user/'+session.data?.user?.id,
+		{
+			password: newPassword
+		}).then(() =>
+    {
+      push('/dashboard');
+		});
   }
 
   return (
@@ -34,7 +34,14 @@ export default function dashboard()
       <div className={styles.form}>
         <h2>Dashboard</h2>
         <p>You are Logged In as ID: {session.data?.user?.id}</p>
-        <button onClick={handleSaveBtn} className={btnStyles.submitBtn}>Edit Profile</button>
+        <div className={styles.inputField}>
+          <label htmlFor="username">Password</label>
+          <input type="password" name="username" id="username" className={styles.input} placeholder='Username'
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </div>
+        <button onClick={handleSaveBtn} className={btnStyles.submitBtn}>Save</button>
       </div>
     </main>
   )
