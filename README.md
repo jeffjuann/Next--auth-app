@@ -11,6 +11,7 @@ Users can :
 
 ## Techs
 - Next.Js
+- Next-Auth
 - Prisma
 - PostgreSQL
 - Axios
