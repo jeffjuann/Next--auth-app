@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: parseInt(id),
       },
     });
-    
+    user?.createdAt.toISOString()
     res.status(200).json(user);
   } 
   else if(req.method === 'POST')
@@ -23,12 +23,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   else if(req.method === 'PATCH')
   {
+    const newUsername = req.body.username;
     const newPassword = req.body.password;
     const newUser = await prisma.user.update({
       where: {
         id: parseInt(id),
       },
       data: {
+        username: newUsername,
         password: newPassword,
       }
     });
