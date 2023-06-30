@@ -58,7 +58,7 @@ export async function getServerSideProps(context: any)
     return {
       props: {
         data: {
-          error: "invalid data",
+          error: "failed fetching data",
         }
       },
     }
