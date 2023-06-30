@@ -2,23 +2,43 @@ import styles from '@/styles/page.module.css'
 import btnStyles from '@/styles/button.module.css';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, useSession, getSession } from 'next-auth/react';
 
-export default function dashboard() 
+export async function getServerSideProps(context: any)
+{
+  const session = await getSession(context);
+  if( session === null )
+  {
+    console.log("ERROR: SESSION NULL");
+    return {
+      props: {},
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    }
+  }
+  else 
+  {
+    return {
+      props: {
+        name: session?.user.name},
+    }
+  }
+}
+
+export default function dashboard(
+  { name }:{ name: string}
+  ) 
 {
   const session = useSession();
   console.log(session);
   const { push } = useRouter();
-  const [testing, setTesting] = useState("auth");
 
   const handleSignOut = () =>
   {
     signOut();
   }
-
-  useEffect(() => {
-    if( session.status === 'unauthenticated' ) push('/login');
-  }, [handleSignOut])
 
   const handleEditProfile = () =>
   {

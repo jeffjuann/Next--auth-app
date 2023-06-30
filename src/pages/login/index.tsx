@@ -1,5 +1,5 @@
 import { FormEventHandler, useEffect, useState } from 'react'
-import { signIn, useSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -9,16 +9,33 @@ import btnStyles from '@/styles/button.module.css';
 import LinkStyles from '@/styles/Link.module.css';
 import InputStyles from '@/styles/input.module.css';
 
+export async function getServerSideProps(context: any)
+{
+  const session = await getSession(context);
+  if( session !== null )
+  {
+    console.log("ERROR: SESSION NOT NULL");
+    return {
+      props: {},
+      redirect: {
+        permanent: false,
+        destination: "/dashboard",
+      },
+    }
+  }
+  else 
+  {
+    return {
+      props: {},
+    }
+  }
+}
+
 export default function Login()
 {
-  const session = useSession();
   const { push } = useRouter();
   const [err, setErr] = useState(false);
 
-  useEffect(() =>
-  {
-    if( session.status === 'authenticated' ) push('/dashboard');
-  })
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) =>
   {
@@ -28,9 +45,8 @@ export default function Login()
       password: user.password,
       redirect: false
     })
-    console.log(session);
-    if(res?.error !== 'invalid credentials') push('/dashboard');
-    else setErr(true);
+    if(res?.error === 'invalid credentials') setErr(true);
+    else push("./dashboard");
   }
 
   const [ user, setUser ] = useState({

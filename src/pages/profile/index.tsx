@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import Axios from 'axios';
 
 /* IMPORT STYLES */
@@ -8,56 +8,82 @@ import styles from '@/styles/page.module.css';
 import btnStyles from '@/styles/button.module.css';
 import InputStyles from '@/styles/input.module.css';
 
-export default function profile() 
+export interface user
 {
-  const session = useSession();
-  const { push } = useRouter();
-  const [ user, setUser ] = useState({
-    id: '',
-    username: '',
-    name : '',
-    password: '',
-    createdAt: Date()
-  });
-  const [ id, setId ] = useState('');
+  id: string,
+  name: string,
+  username: string,
+  password: string,
+  createdAt: Date
+}
 
-  useEffect( () => {
-    if( session.status === 'loading') return;
-    console.log(session);
-    if( session.status === 'unauthenticated' ) push('/login');
-    else
-    {
-      setId(session.data?.user.id);
-      if(id !== undefined && id !== '')
-      {
-        Axios.get('http://localhost:3000/api/user/'+id)
-        .then((response) =>
-        {
-          console.log(response.data);
-          setUser({
-            id: id,
-            username: response.data.user.username,
-            name: response.data.user.name,
-            password: response.data.user.password,
-            createdAt: response.data.user.createdAt,
-          });
-          console.log(user);
-        })
-      }
+async function getUser(id: string)
+{
+}
+
+export async function getServerSideProps(context: any)
+{
+  const session = await getSession(context);
+  if( session === null )
+  {
+    console.log("ERROR: SESSION NULL");
+    return {
+      props: {},
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
     }
-  }, [session])
+  }
+  const id = session?.user.id;
+  return await Axios.get('http://localhost:3000/api/user/'+id)
+  .then((response) =>
+  {
+    return {
+      props: {
+        data: {
+          error: null,
+          user: {
+            id: id,
+            username: response.data.username,
+            name: response.data.name,
+            password: response.data.password,
+            createdAt: response.data.createdAt,
+          },
+        }
+      },
+    }
+  }).catch(() =>
+  {
+    return {
+      props: {
+        data: {
+          error: "invalid data",
+        }
+      },
+    }
+  })
+}
 
 
-	const [ newUser, setNewUser ] = useState({
-    name: user.name,
-    username: user.username,
-    password: '',
+export default function profile(
+  { data }:{ data: any}
+  ) 
+{
+  console.log("Testing: "+data.error);
+  const { push } = useRouter();
+  const [ newUser, setNewUser ] = useState({
+    id: data.user.id,
+    name : data.user.name,
+    username: data.user.username,
+    password: data.user.password,
+    createdAt: data.user.createdAt,
   });
 
   const handleSaveBtn = async (e: any) =>
   {
     e.preventDefault();
-    await Axios.patch('http://localhost:3000/api/user/'+id,
+    await Axios.patch('http://localhost:3000/api/user/'+newUser.id,
 		{
       username: newUser.username,
 			password: newUser.password
@@ -70,7 +96,7 @@ export default function profile()
   return (
     <main className={styles.main}>
       <div className={styles.form}>
-        <h2>Your Profile [UID: {id}]</h2>
+        <h2>Your Profile [UID: {newUser.id}]</h2>
 
         <div className={InputStyles.inputField}>
           <label htmlFor="username">Username</label>
@@ -86,7 +112,7 @@ export default function profile()
             onChange={(e) => setNewUser({...newUser, password: e.target.value})}
           />
         </div>
-        <h2 style={{fontSize: 14}}>You created your account on {user.createdAt}</h2>
+        <h2 style={{fontSize: 14}}>You created your account on {newUser.createdAt}</h2>
         <button onClick={handleSaveBtn} className={btnStyles.submitBtn}>Save</button>
       </div>
     </main>
