@@ -1,17 +1,38 @@
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { useEffect } from 'react';
 
-export default function Home() {
-  const session  = useSession();
-  const { push } = useRouter();
+export async function getServerSideProps(context: any)
+{
+  const session = await getSession(context);
+  if( session === null )
+  {
+    console.log("ERROR: SESSION NULL");
+    return {
+      props: {},
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    }
+  }
+  else 
+  {
+    console.log("ERROR: SESSION NOT NULL");
+    return {
+      props: {},
+      redirect: {
+        permanent: false,
+        destination: "/dashboard",
+      },
+    }
+  }
+}
 
-  useEffect(() => {
-    if( session.status === 'unauthenticated' ) push('/login');
-    else push('/dashboard');
-  })
+export default function Home()
+{
   return (
     <>
       <main className={styles.main}>

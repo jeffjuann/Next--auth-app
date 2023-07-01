@@ -70,7 +70,7 @@ export default function profile(
   { data }:{ data: any}
   ) 
 {
-  console.log("Testing: "+data.error);
+  // console.log("Testing: "+data.error);
   const { push } = useRouter();
   const [ newUser, setNewUser ] = useState({
     id: data.user.id,
